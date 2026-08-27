@@ -24,10 +24,12 @@ jobs:
 
       - name: Instala plataforma, build-tools, NDK e CMake
         run: |
-          sdkmanager --install "platforms;android-33" "build-tools;33.0.2" "ndk;25.2.9519653" "cmake;3.22.1"
+          sdkmanager --install "platforms;android-34" "build-tools;34.0.0" "ndk;25.2.9519653" "cmake;3.22.1"
 
       - name: Configura Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: "8.2"
 
       - name: Compila APK debug
         run: gradle assembleDebug --no-daemon --stacktrace
@@ -39,4 +41,3 @@ jobs:
         with:
           name: mini-engine-apk
           path: app/build/outputs/apk/debug/*.apk
-          
