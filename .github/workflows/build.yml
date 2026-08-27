@@ -1,0 +1,42 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixa o código
+        uses: actions/checkout@v4
+
+      - name: Configura JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configura Android SDK (sdkmanager)
+        uses: android-actions/setup-android@v3
+
+      - name: Instala plataforma, build-tools, NDK e CMake
+        run: |
+          sdkmanager --install "platforms;android-33" "build-tools;33.0.2" "ndk;25.2.9519653" "cmake;3.22.1"
+
+      - name: Configura Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Compila APK debug
+        run: gradle assembleDebug --no-daemon --stacktrace
+        env:
+          ANDROID_NDK_HOME: ${{ env.ANDROID_SDK_ROOT }}/ndk/25.2.9519653
+
+      - name: Envia o APK gerado
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-engine-apk
+          path: app/build/outputs/apk/debug/*.apk
+          
