@@ -1,1 +1,39 @@
+apply plugin: 'com.android.application'
 
+android {
+    namespace 'com.exemplo.miniengine'
+    compileSdkVersion 33
+    ndkVersion "25.2.9519653"
+
+    defaultConfig {
+        applicationId "com.exemplo.miniengine"
+        minSdkVersion 19
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_STL=c++_shared"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.22.1"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
